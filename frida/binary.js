@@ -2,7 +2,7 @@
 //var n_addr_func_offset = 0x7FAB1F2F88 - 0x7FAB19D000;    
 //var n_addr_so = Module.findBaseAddress(str_name_so); 
 //var n_addr_func = parseInt(n_addr_so, 16) + n_addr_func_offset;
-////var ptr_func = new NativePointer(n_addr_func);
+//var ptr_func = new NativePointer(n_addr_func);
 
 
 
