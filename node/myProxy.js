@@ -29,7 +29,11 @@ let mylocation = {
     "pathname": "/",
     "host": "baike.baidu.com",
     "hostname": "baike.baidu.com",
-}
+};
+let myhistory =  {
+    "length" : 2
+};
+
 let mywindow = {
     XMLHttpRequest: function () {    },
     sessionStorage: {},
@@ -43,11 +47,10 @@ let mywindow = {
     location: mylocation,
     document: mydocument,
     navigator: mynavigator,
-    
+    history:myhistory,
 };
 
-let Image = function () {
-};
+
 
 
 
@@ -158,6 +161,7 @@ const screen = new Proxy(Object.create(mysrceen), getObjhandler("screen"));
 const location = new Proxy(mylocation, getObjhandler("location"));
 const document = new Proxy(mydocument, getObjhandler("document"));
 const window = new Proxy(Object.assign(global, mywindow), getObjhandler("window"));
+const history = new Proxy(Object.create(myhistory), getObjhandler("history"));
 
 
 module.exports = {
@@ -166,6 +170,6 @@ module.exports = {
     screen,
     location,
     String,
-    Image,
+    history,
     document
 }

@@ -15,30 +15,6 @@ function zmqHook() {
 
 
 
-    // var zmq_msg_sendfunc = Module.findExportByName("libzmq.so","zmq_msg_send");
-    // console.log(zmq_msg_sendfunc)
-
-    // Interceptor.attach(zmq_msg_sendfunc, {
-    //     onEnter: function(args) {
-    //         send("Enter zmq_msg_send");
-    //         //send("args[0] =" + args[0]); 
-    //         var dataAddress = zmq_msg_data(args[0])
-    //         //send("dataAddress =" + dataAddress); 
-    //         console.log(Memory.readByteArray(dataAddress, 0x40))
-    //         //send(Memory.readByteArray(dataAddress, 0x40))
-    //         //send("args[1]=" + args[1].readCString());
-    //     },
-    //     onLeave: function(retval){
-    //         //send("Leave zmq_msg_send");
-    //         send("size:"+retval);
-    //         // if (retval == 0x35){
-    //         //    var backtrace = Thread.backtrace(this.context, Backtracer.ACCURATE).map(DebugSymbol.fromAddress);
-    //         //    send(backtrace);
-    //         // };
-
-    //     }
-    // });
-
     var zmq_msg_recvfunc = Module.findExportByName("libzmq.so", "zmq_msg_recv");
     console.log(zmq_msg_recvfunc)
     Interceptor.attach(zmq_msg_recvfunc, {
@@ -49,9 +25,7 @@ function zmqHook() {
             var dataAddress = zmq_msg_dataFunc(args[0])
             //send("dataAddress =" + dataAddress); 
             this.dataAddress = dataAddress
-
-            //console.log(Memory.readByteArray(dataAddress, 0x40))
-
+            console.log(hexdump(dataAddress))
             //send(Memory.readByteArray(dataAddress, 0x40))
             //send("args[1]=" + args[1].readCString());
         },
@@ -68,33 +42,6 @@ function zmqHook() {
 
         }
     });
-
-
-    var zmq_recvfunc = Module.findExportByName("libzmq.so", "zmq_recv");
-    console.log(zmq_recvfunc)
-    Interceptor.attach(zmq_recvfunc, {
-        onEnter: function (args) {
-            send("Enter zmq_recv");
-            //send("args[0] =" + args[0]); 
-            //var dataAddress = zmq_msg_data(args[0])
-            //send("dataAddress =" + dataAddress); 
-            //console.log(Memory.readByteArray(dataAddress, 0x40))
-            //send(Memory.readByteArray(dataAddress, 0x40))
-            //send("args[1]=" + args[1].readCString());
-        },
-        onLeave: function (retval) {
-            //send("Leave zmq_recv");
-            send("size:" + retval);
-            // if (retval == 0x35){
-            //    var backtrace = Thread.backtrace(this.context, Backtracer.ACCURATE).map(DebugSymbol.fromAddress);
-            //    send(backtrace);
-            // };
-
-        }
-    });
-
-
-
 }
 
 
@@ -105,12 +52,9 @@ function fileInit() {
         Java.use("java.io.File").$init.overload('java.io.File', 'java.lang.String').implementation = function (file, name) {
             var result = this.$init(file, name)
             //var stack = Java.use("android.util.Log").getStackTraceString(Java.use("java.lang.Throwable").$new());
-            //console.log(file.getPath())
-            //if (/*file.getPath().indexOf("cacert") >= 0 && */stack.indexOf("X509TrustManagerExtensions.checkServerTrusted") >= 0) {
             console.log(file.getPath() + "/" + name)
             // console.log(name)
             //console.log(stack)
-            //}
             return result;
         }
     })
