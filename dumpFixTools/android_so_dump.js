@@ -3,8 +3,12 @@
 setTimeout(function() {
     var libapp = null;
     Process.enumerateModules().forEach(function(m) {
-        if (m.name === "libapp.so" && m.size > 0x100000) libapp = m;
+        if (m.name === "libapp.so") libapp = m;
     });
+    if (!libapp) {
+        console.log("[-] libapp.so not found (not loaded yet, or below the 1MB threshold)");
+        return;
+    }
     console.log("[*] libapp.so: " + libapp.base + " size=0x" + libapp.size.toString(16));
 
     var appRanges = Process.enumerateRanges('r--').filter(function(r) {
@@ -96,7 +100,7 @@ setTimeout(function() {
     // Write metadata
     try {
         var mf = new File(outDir + "/libapp_meta.txt", "w");
-        mf.write("base=0x" + libapp.base + "\n");
+        mf.write("base=" + libapp.base + "\n");
         mf.write("size=0x" + libapp.size.toString(16) + "\n");
         appRanges.forEach(function(r, idx) {
             var off = r.base.sub(libapp.base);
